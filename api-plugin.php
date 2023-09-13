@@ -3,51 +3,51 @@
 namespace NamePlugin;
 
 class NameApi {
-    public $api_url;
+    public $apiUrl;
 
-    public function list_vacansies($post, $vid = 0) {
+    public function listVacansies($post, $vid = 0) {
         global $wpdb;
 
-        $ret = array();
+        $vanacies = array();
 
         if (!is_object($post)) {
             return false;
         }
 
         $page = 0;
-        $found = false;
+        $foundVacancy = false;
         l1:
-        $params = "status=all&id_user=" . $this->self_get_option('superjob_user_id') . "&with_new_response=0&order_field=date&order_direction=desc&page={$page}&count=100";
-        $res = $this->api_send($this->api_url . '/hr/vacancies/?' . $params);
-        $res_o = json_decode($res);
-        if ($res !== false && is_object($res_o) && isset($res_o->objects)) {
-            $ret = array_merge($res_o->objects, $ret);
+        $params = "status=all&id_user=" . $this->selfGetOption('superjob_user_id') . "&with_new_response=0&order_field=date&order_direction=desc&page={$page}&count=100";
+        $response = $this->apiSend($this->apiUrl . '/hr/vacancies/?' . $params);
+        $responseOut = json_decode($response);
+        if ($response !== false && is_object($responseOut) && isset($responseOut->objects)) {
+            $vanacies = array_merge($responseOut->objects, $vanacies);
             if ($vid > 0) // Для конкретной вакансии, иначе возвращаем все
-                foreach ($res_o->objects as $key => $value) {
+                foreach ($responseOut->objects as $key => $value) {
                     if ($value->id == $vid) {
-                        $found = $value;
+                        $foundVacancy = $value;
                         break;
                     }
                 }
 
-            if ($found === false && $res_o->more) {
+            if ($foundVacancy === false && $responseOut->more) {
                 $page++;
                 goto l1;
             } else {
-                if (is_object($found)) {
-                    return $found;
+                if (is_object($foundVacancy)) {
+                    return $foundVacancy;
                 } else {
-                    return $ret;
+                    return $vanacies;
                 }
             }
         }
 
         return false;
     }    
-    public function api_send() {
+    public function apiSend($link) {
         return '';
     }
-    public function self_get_option($option_name) {
+    public function selfGetOption($optionMame) {
         return '';
     }
 }
