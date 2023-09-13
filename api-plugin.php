@@ -40,8 +40,6 @@ class NameApi {
                     return $ret;
                 }
             }
-        } else {
-            return false;
         }
 
         return false;
