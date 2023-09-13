@@ -46,8 +46,30 @@ class NameApi {
 
         return false;
     }    
-    public function api_send() {
-        return '';
+    public function api_send($link) {
+        
+        $curl = curl_init();
+
+        $options = [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => $link,
+            CURLOPT_HTTPHEADER => ['Content-Type:application/json'],
+            CURLOPT_HEADER => false,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ];
+
+        curl_setopt_array($curl, $options);
+        $out = curl_exec($curl);
+        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        
+        $code = (int) $code;
+        $response = json_decode($out, true);
+        if (200 != $code) {
+            return false;
+        } else {
+            return $response;
+        }
     }
     public function self_get_user_id($option_name) {
         $users = [1 => 'superjob_user_id', 2 => 'not_superjob_user_id'];
