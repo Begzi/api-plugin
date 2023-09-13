@@ -17,7 +17,7 @@ class NameApi {
         $page = 0;
         $found = false;
         l1:
-        $params = "status=all&id_user=" . $this->self_get_user_id('superjob_user_id') . "&with_new_response=0&order_field=date&order_direction=desc&page={$page}&count=100";
+        $params = "status=all&id_user=" . $this->self_get_option('superjob_user_id') . "&with_new_response=0&order_field=date&order_direction=desc&page={$page}&count=100";
         $res = $this->api_send($this->api_url . '/hr/vacancies/?' . $params);
         $res_o = json_decode($res);
         if ($res !== false && is_object($res_o) && isset($res_o->objects)) {
@@ -71,9 +71,7 @@ class NameApi {
             return $response;
         }
     }
-    public function self_get_user_id($option_name) {
-        $users = [1 => 'superjob_user_id', 2 => 'not_superjob_user_id'];
-
-        return array_search($option_name, $users);
+    public function self_get_option($option_name) {
+        return '';
     }
 }
